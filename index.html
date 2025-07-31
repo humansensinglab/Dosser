@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DOSSER – Differentially Private Dataset Distillation</title>
+
+<link rel="stylesheet" href="assets/css/your‑style.css">
+<link href="https://fonts.googleapis.com/css2?family=Trade+Gothic+Next:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="single single-portfolio portfolio-details-top">
+
+<!-- Page Wrapper -->
+<div id="page" class="site">
+  <div class="site-content-contain">
+    <div id="content" class="site-content">
+      <div id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+          <div class="container t-offset-20">
+            <div class="row">
+              <div class="col-sm-12">
+
+<article class="portfolio">
+
+  <header class="entry-header" style="text-align:center;">
+    <h1 style="font-family: 'Trade Gothic Next', sans-serif; font-weight: 700;">Improving Noise Efficiency in Privacy-preserving Dataset Distillation</h1>
+
+    <div style="font-size:22px;line-height:1.8;">
+      <span class="author-email" data-email="runkaiz@andrew.cmu.edu" onclick="copyEmail(this)">Runkai Zheng<sup>1</sup></span>, 
+      <span class="author-email" data-email="vdasu@psu.edu" onclick="copyEmail(this)">Vishnu Asutosh Dasu<sup>2</sup></span>, 
+      <span class="author-email" data-email="yinongwa@cs.cmu.edu" onclick="copyEmail(this)">Yinong Oliver Wang<sup>1</sup></span><br>
+      <span class="author-email" data-email="haohanw@illinois.edu" onclick="copyEmail(this)">Haohan Wang<sup>3</sup></span>, 
+      <span class="author-email" data-email="ftorre@cs.cmu.edu" onclick="copyEmail(this)">Fernando De la Torre<sup>1</sup></span><br>
+      <div style="font-size:18px;margin-top:10px;line-height:1.4;">
+        <sup>1</sup>Carnegie Mellon University<br>
+        <sup>2</sup>Pennsylvania State University<br>
+        <sup>3</sup>University of Illinois Urbana-Champaign
+      </div>
+    </div>
+
+    <div id="copy-toast"></div>
+
+    <div class="link-buttons">
+      <a href="assets/paper.pdf" target="_blank"><i class="fas fa-file-pdf"></i>Paper</a>
+      <a href="https://arxiv.org/abs/xxxx.xxxxx" target="_blank"><i class="fas fa-book"></i>arXiv</a>
+      <a href="https://github.com/humansensinglab/Dosser" target="_blank"><i class="fab fa-github"></i>Code</a>
+    </div>
+  </header>
+
+
+
+  <!-- ========= TLDR ========= -->
+  <div style="background-color: #f8f9fa; padding: 20px; margin: 20px 380px; border-radius: 5px; text-align: left;">
+    <div style="font-size: 18px; line-height: 1.6; font-family: 'Trade Gothic Next', sans-serif; padding-left: 20px;">
+      <p style="margin: 0 0 15px 0; font-weight: 700; font-size: 20px; text-align: center;">TL;DR:</p>
+      <p style="margin: 0 0 15px 0;"><strong>1. Problem:</strong> Existing Matching-based Differentially Private Dataset Distillation (DP-DD) pipelines waste privacy budget by resampling noisy signals every optimization step and rely on randomly initialized networks, yielding low‑SNR training signals.</p>
+      <p style="margin: 0 0 15px 0;"><strong>2. Method:</strong></p>
+      <ul style="margin: 0 0 15px 0; padding-left: 20px;">
+        <li><strong>Decoupled Optimization & Sampling (DOS):</strong> gathers DP‑protected signals once, then reuses them indefinitely;</li>
+        <li><strong>Subspace Error Reduction (SER):</strong> projects those signals into an informative PCA subspace learned from auxiliary data, amplifying signal and adding little extra privacy cost.</li>
+      </ul>
+      <p style="margin: 0;"><strong>3. Result:</strong> On CIFAR‑10, DOS + SER boosts accuracy by <strong>+10 pp</strong> with 50 images/class and retains prior accuracy using only <strong>20 %</strong> of the distilled images, setting a new state of the art for privacy‑preserving dataset distillation.</p>
+    </div>
+  </div>
+
+  <h3 id="intro-figure" style="text-align: center; font-family: 'Trade Gothic Next', sans-serif; font-weight: 700;">Motivation</h3>
+  <div style="text-align: center;">
+    <img src="assets/figures/intro.png" style="width:80%;max-width:600px;" alt="Introduction figure">
+    <p style="margin: 15px 380px 0 380px;"><strong>Figure 1.</strong> (a) Overview of private dataset distillation. (b) CIFAR-10 classification accuracy using distilled images with varying privacy budgets and images per class (IPC).</p>
+  </div>
+
+  <!-- ========= Abstract ========= -->
+  <div style="padding: 20px; margin: 20px 380px; border-radius: 5px; text-align: left;">
+    <div style="font-size: 16px; line-height: 1.7; font-family: 'Trade Gothic Next', sans-serif; padding-left: 20px;">
+      <p style="margin: 0 0 15px 0; font-weight: 700; font-size: 20px; text-align: center;">Abstract:</p>
+      <p style="margin: 0; text-align: justify;">
+        Modern machine learning models heavily rely on large datasets that often include sensitive and private information, raising serious privacy concerns. Differentially private (DP) data generation offers a solution by creating synthetic datasets that limit the leakage of private information within a predefined privacy budget; however, it requires a substantial amount of data to achieve performance comparable to models trained on the original data. To mitigate the significant expense incurred with synthetic data generation, Dataset Distillation (DD) stands out for its remarkable training and storage efficiency. This efficiency is particularly advantageous when integrated with DP mechanisms, curating compact yet informative synthetic datasets without compromising privacy. However, current state-of-the-art private DD methods suffer from a synchronized sampling-optimization process and the dependency on noisy training signals from randomly initialized networks. This results in the inefficient utilization of private information due to the addition of excessive noise. To address these issues, we introduce a novel framework that decouples sampling from optimization for better convergence and improves signal quality by mitigating the impact of DP noise through matching in an informative subspace, all without incurring additional privacy costs. On CIFAR-10, our method achieves a <strong>10.0%</strong> improvement with 50 images per class and <strong>8.3%</strong> increase with just <strong>one-fifth</strong> the distilled set size of previous state-of-the-art methods, demonstrating significant potential to advance privacy-preserving dataset distillation.
+      </p>
+    </div>
+  </div>
+
+
+
+  <!-- ========= 摘要 / Pipeline 图 ========= -->
+  <h3 id="model" style="text-align: center; font-family: 'Trade Gothic Next', sans-serif; font-weight: 700;">Overview of the Pipeline</h3>
+  <div style="text-align: center;">
+    <img src="assets/figures/framework.png" style="width:90%;max-width:1200px;" alt="Framework figure">
+    <p style="margin: 15px 380px 0 380px;"><strong>Figure 2.</strong> Overview of our proposed framework, which integrates Decoupled Optimization and Sampling (DOS) with Subspace Discovery for Error Reduction (SER).</p>
+  </div>
+
+  <div style="margin: 20px 380px;">
+    <h4 style="font-family: 'Trade Gothic Next', sans-serif; font-weight: 700; margin-bottom: 15px;">Pipeline at a glance</h4>
+    
+    <ul style="line-height: 1.6; font-family: 'Trade Gothic Next', sans-serif; text-align: justify;">
+      <li style="margin-bottom: 15px;">
+        <strong>Baseline (left, blue): matching‑based DD.</strong> Every iteration <em>simultaneously</em>
+        <ol style="margin-top: 8px; margin-left: 20px;">
+          <li>samples a fresh mini‑batch from the private data,</li>
+          <li>extracts two noisy feature sets through a randomly‑initialised network,</li>
+          <li>clips + averages them, and</li>
+          <li>optimises the synthetic images by minimising their feature gap.</li>
+        </ol>
+        Because sampling and optimisation are locked together, each step burns privacy budget and the noise accumulates.
+      </li>
+      
+      <li style="margin-bottom: 15px;">
+        <strong>Ours—Dosser (right, green): two clearly separated stages.</strong>
+        <ul style="margin-top: 8px; margin-left: 20px;">
+          <li style="margin-bottom: 10px;">
+            <em>Sampling stage (I₁ steps):</em> before touching private data, we run <strong>Subspace Discovery</strong> once (PCA on auxiliary images) to pick the top‑<em>p</em> informative directions. Each sampling step then
+            <ul style="margin-top: 5px; margin-left: 20px;">
+              <li>instantiates a random network,</li>
+              <li>projects its features into that fixed subspace,</li>
+              <li>clips, adds DP noise, and stores the tuple containing the random seed for data augmentation, network parameters, projection matrix and DP-protected training signal in a cache S.</li>
+            </ul>
+          </li>
+          <li>
+            <em>Optimisation stage (I₂ ≫ I₁ steps):</em> we repeatedly draw cached signals from S, synthetic images, compute the projected features of the synthetic images, and minimise the gap to the DP-protected training signal.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    
+    <p style="margin-top: 20px; line-height: 1.6; font-family: 'Trade Gothic Next', sans-serif; text-align: justify;">
+      The result is a distillation loop that <strong>reduces cumulative noise, reuses high‑SNR directions, and allows many more optimisation updates than private queries</strong>, yielding smaller yet more accurate DP‑protected synthetic datasets.
+    </p>
+  </div>
+
+  <!-- ========= 结果区域 ========= -->
+  <h3 id="experiment-results" style="text-align: center; font-family: 'Trade Gothic Next', sans-serif; font-weight: 700;">Evaluation Against Baselines</h3>
+  
+  <div style="text-align: center; margin: 20px 0;">
+    <table style="width: 100%; max-width: 1200px; border-collapse: collapse; margin: 0 auto; font-family: 'Trade Gothic Next', sans-serif; font-size: 14px;">
+      <thead>
+        <tr style="background-color: #f8f9fa;">
+          <th style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">Method</th>
+          <th colspan="2" style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">MNIST</th>
+          <th colspan="2" style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">FashionMNIST</th>
+          <th colspan="2" style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">CIFAR-10</th>
+        </tr>
+        <tr style="background-color: #f8f9fa;">
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;"></th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">IPC=10</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">IPC=50</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">IPC=10</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">IPC=50</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">IPC=10</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">IPC=50</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background-color: #d4edda;">
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 600;">DM w/o DP</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">97.8</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">99.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">84.6</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">88.7</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">52.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">60.6</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 600;">DP-Sinkhorn</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">31.7±3.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">33.9±1.7</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">9.8±0.0</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">22.0±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 600;">DP-MERF</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">75.0±0.3</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">84.4±2.3</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">65.5±3.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">71.3±1.7</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 600;">DP-KIP-ScatterNet</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">25.8±2.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">13.8±2.6</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">17.7±1.5</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">16.2±1.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">16.8±1.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">9.5±0.5</td>
+        </tr>
+        <tr style="background-color: #cce5ff;">
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 600;">PSG</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">78.6±0.7</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">68.5±0.5</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">33.6±0.3</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">-</td>
+        </tr>
+        <tr style="background-color: #cce5ff;">
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 600;">NDPDC</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">93.1±0.4</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">94.1±0.4</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">77.7±0.6</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">78.8±0.4</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">39.4±0.8</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">42.3±0.8</td>
+        </tr>
+        <tr style="background-color: #cce5ff;">
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 700;">Dosser (ours)</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">95.3±0.0</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">96.4±0.0</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">81.6±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">81.8±0.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">44.2±0.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">49.1±0.5</td>
+        </tr>
+        <tr style="background-color: #cce5ff;">
+          <td style="border: 1px solid #ddd; padding: 12px; font-weight: 700;">Dosser (ours) w/ PEA</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">96.4±0.0</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">96.7±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">80.1±0.5</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">83.1±0.5</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">50.6±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">52.3±0.6</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin: 15px 380px 0 380px;"><strong>Table 1.</strong> Comparison of accuracies achieved by various methods on MNIST, FashionMNIST, and CIFAR-10 datasets. Dosser achieves significant improvements over baseline methods, particularly on more complex datasets like CIFAR-10.</p>
+  </div>
+
+  <!-- ========= Ablation Studies ========= -->
+  <h3 id="ablation-studies" style="text-align: center; font-family: 'Trade Gothic Next', sans-serif; font-weight: 700;">Ablation Studies</h3>
+  
+
+
+  <div style="text-align: center; margin: 20px 0;">
+    <table style="width: 100%; max-width: 800px; border-collapse: collapse; margin: 0 auto; font-family: 'Trade Gothic Next', sans-serif; font-size: 14px;">
+      <thead>
+        <tr style="background-color: #f8f9fa;">
+          <th colspan="2" style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">Dosser Components</th>
+          <th colspan="4" style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">(IPC, ε)</th>
+        </tr>
+        <tr style="background-color: #f8f9fa;">
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">DOS</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">SER</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">(10, 1)</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">(50, 1)</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">(10, 10)</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: center; font-weight: 600;">(50, 10)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✗</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✗</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">41.7±0.0</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">45.7±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">54.1±0.0</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">57.7±0.0</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✓</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✗</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">47.7±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">51.0±0.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">56.7±0.5</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">61.1±0.1</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✗</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✓</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">46.5±0.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">47.8±0.3</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">54.7±0.5</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">57.6±0.0</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✓</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">✓</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">50.6±0.1</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">52.3±0.3</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center; font-weight: 700;">58.0±0.2</td>
+          <td style="border: 1px solid #ddd; padding: 12px; text-align: center;">61.0±0.0</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin: 15px 380px 0 380px;"><strong>Table 2.</strong> Ablation studies evaluating the individual contributions of DOS and SER components. Both modules provide significant improvements, with their combination yielding the best performance.</p>
+  </div>
+
+  <!-- ========= BibTeX ========= -->
+  <div style="background-color: #f8f9fa; padding: 20px; margin: 20px 380px; border-radius: 5px; text-align: left;">
+    <div style="font-size: 16px; line-height: 1.6; font-family: 'Trade Gothic Next', sans-serif; padding-left: 20px;">
+      <p style="margin: 0 0 15px 0; font-weight: 700; font-size: 20px; text-align: center;">BibTeX:</p>
+      <div style="background-color: #ffffff; padding: 15px; border-radius: 5px; border: 1px solid #e0e0e0; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.4; overflow-x: auto;">
+        <pre style="margin: 0;">@inproceedings{zheng2025improving,
+  title     = {Improving Noise Efficiency in Privacy-preserving Dataset Distillation},
+  author    = {Zheng, Runkai and Dasu, Vishnu Asutosh and Wang, Yinong Oliver and Wang, Haohan and De la Torre, Fernando},
+  booktitle = {ICCV},
+  year      = {2025}
+}</pre>
+      </div>
+      <div style="text-align: center; margin-top: 15px;">
+        <button onclick="copyBibtex()" style="background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Trade Gothic Next', sans-serif;">Copy BibTeX</button>
+      </div>
+    </div>
+  </div>
+
+</article><!-- /.portfolio -->
+<!-- ================================================== -->
+
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container -->
+      </main><!-- #main -->
+    </div><!-- #primary -->
+  </div><!-- .site-content-contain -->
+
+  <!-- ===== 页脚 ===== -->
+  <footer id="footer" class="site-footer standard" role="contentinfo">
+    <div class="container">
+      <div class="site-info">© 2025 Authors.</div>
+    </div>
+  </footer>
+
+</div><!-- #page -->
+
+<!-- ===== 你原有的脚本（jQuery、main.js 等） ===== -->
+<script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+<!-- ===== 邮件复制 / Tab 切换脚本 ===== -->
+<script>
+function copyEmail(el){
+  navigator.clipboard.writeText(el.dataset.email).then(()=>showToast("📋 Copied: "+el.dataset.email));
+}
+function showToast(msg){
+  const toast=document.getElementById('copy-toast');
+  toast.textContent=msg;toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2000);
+}
+function openTab(evt,id){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-buttons button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.currentTarget.classList.add('active');
+}
+function copyBibtex(){
+  navigator.clipboard.writeText(document.getElementById('bibtex').innerText.trim()).then(()=>alert("Copied!"));
+}
+</script>
+
+<!-- ===== 简易 Toast 样式 ===== -->
+<style>
+.author-email{color:#1a73e8;cursor:pointer;position:relative}
+#copy-toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);
+  background:#323232;color:#fff;padding:8px 16px;border-radius:20px;font-size:14px;opacity:0;
+  transition:opacity .4s;z-index:999}
+#copy-toast.show{opacity:1}
+.link-buttons{text-align:center;margin-top:20px}
+.link-buttons a{display:inline-flex;align-items:center;background:#333;color:#fff;
+  padding:10px 18px;margin:6px;border-radius:999px;font-size:15px}
+.link-buttons a:hover{background:#555}
+</style>
+
+</body>
+</html>

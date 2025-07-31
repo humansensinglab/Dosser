@@ -6,6 +6,8 @@ This repository provides an implementation of a framework for noise-efficient di
 
 The framework introduces **Decoupled Optimization and Sampling (DOS)** and **Subspace discovery for Error Reduction (SER)** to improve the utility of distilled datasets under differential privacy constraints.
 
+![DOSser Architecture](assets/figures/framework.png)
+
 ## Prerequisites
 
 See requirements.txt
